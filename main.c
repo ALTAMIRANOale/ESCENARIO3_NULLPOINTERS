@@ -8,9 +8,9 @@ Responsabilidades actuales:
 - Carga de datos
 
 Modulos pendientes:
-- Punto 1 (Axel)
+- Punto 1 (Altamirano)
 - Punto 2 (Agustin)
-- Punto 3 (Dana)
+- Punto 3 (Axel)
 - Punto 4 (Agustin)
 
 Las constantes fisicas se encuentran definidas
