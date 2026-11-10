@@ -28,3 +28,18 @@ double calcular_energia_potencial(double masa, double r);
 double calcular_trabajo_minimo(double masa, double altitud_leo);
 
 #endif // TLI_H
+
+// Nodo para la lista enlazada que registrará los tramos de la trayectoria y su desaceleracion
+typedef struct NodoTrayectoria {
+    double distancia_centro;        // Distancia desde el centro de la Tierra (metros)
+    double desaceleracion;          // Aceleración de frenado en ese punto (m/s^2)
+    struct NodoTrayectoria* siguiente; // Puntero al siguiente nodo
+} NodoTrayectoria;
+
+// Tus prototipos de funciones
+void explicar_primera_ley_newton(void);
+double calcular_desaceleracion_gravitatoria(double distancia);
+NodoTrayectoria* crear_nodo(double distancia);
+void insertar_tramo(NodoTrayectoria** cabeza, double distancia);
+void mostrar_trayectoria_lista(NodoTrayectoria* cabeza);
+void liberar_lista(NodoTrayectoria* cabeza);
