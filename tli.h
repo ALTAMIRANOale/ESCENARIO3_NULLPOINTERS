@@ -119,6 +119,26 @@ void liberarBitacora(
 );
 
 /*=========================================
+  MUESTRA DE TELEMETRIA
+=========================================*/
+
+/*
+ * Punto de telemetria asociado a una distancia
+ * de la trayectoria LEO - L1.
+ */
+typedef struct
+{
+    double tiempo;
+    double distancia;
+    double velocidad;
+
+    double energiaCinetica;
+    double energiaPotencial;
+    double energiaTotal;
+
+} MuestraTelemetria;
+
+/*=========================================
   ARBOL BINARIO DE EVALUACION
 =========================================*/
 
@@ -131,6 +151,10 @@ typedef struct NodoArbol
     char nombre[MAX_NOMBRE];
 
     double valor;
+
+    MuestraTelemetria muestra;
+
+    int altura;
 
     struct NodoArbol *izq;
     struct NodoArbol *der;

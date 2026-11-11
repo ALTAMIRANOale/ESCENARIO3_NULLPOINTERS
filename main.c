@@ -12,8 +12,11 @@ Modulos integrados:
 
 Modulos pendientes:
 - Punto 1 (Altamirano)
-- Punto 3 (Axel)
 - Punto 4 (Agustin)
+
+Modulo en desarrollo:
+- Punto 3 (Axel): trabajo, equilibrio
+  y arbol AVL en trabajo.c / arbol.c
 
 Las constantes fisicas se encuentran definidas
 en tli.h y se cargan automaticamente.
@@ -21,7 +24,8 @@ en tli.h y se cargan automaticamente.
 Cuando los integrantes entreguen sus modulos:
 1. Reemplazar los stubs de los puntos.
 2. Implementar lista enlazada de bitacora.
-3. Implementar arbol binario de evaluacion.
+3. El arbol de telemetria del Punto 3
+   se encuentra en arbol.c.
 =================================================
 */
 
@@ -29,36 +33,9 @@ Cuando los integrantes entreguen sus modulos:
 #include <stdlib.h>
 
 #include "tli.h"
-
-/*=========================================
-  VALIDACION DE DATOS
-=========================================*/
-
-/* Lee un numero positivo evitando letras,
-   negativos y ceros */
-double leerDoublePositivo(const char *mensaje)
-{
-    double valor;
-    int valido;
-
-    do
-    {
-        printf("%s", mensaje);
-
-        valido = scanf("%lf", &valor);
-
-        /* Limpia buffer */
-        while(getchar() != '\n');
-
-        if(valido != 1 || valor <= 0)
-        {
-            printf("Error. Ingrese un numero positivo.\n");
-        }
-
-    } while(valido != 1 || valor <= 0);
-
-    return valor;
-}
+#include "validaciones.h"
+#include "trabajo.h"
+#include "arbol.h"
 
 /*=========================================
   CARGA DE DATOS
@@ -100,7 +77,7 @@ void cargarDatos(DatosTLI *datos)
 =========================================*/
 
 /*
- * Reemplazar cuando Axel entregue
+ * Reemplazar cuando Altamirano entregue
  * el Punto 1.
  */
 void punto1_leyNewton(DatosTLI d, NodoEvento **l)
@@ -108,24 +85,7 @@ void punto1_leyNewton(DatosTLI d, NodoEvento **l)
     (void)d;
     (void)l;
 
-    printf("\n[Axel todavia no subio el Punto 1]\n");
-}
-
-/*
- * Reemplazar cuando Dana entregue
- * el Punto 3.
- */
-void punto3_trabajo(
-    DatosTLI d,
-    BalanceEnergetico b,
-    NodoArbol **r
-)
-{
-    (void)d;
-    (void)b;
-    (void)r;
-
-    printf("\n[Dana todavia no subio el Punto 3]\n");
+    printf("\n[Altamirano todavia no subio el Punto 1]\n");
 }
 
 /*
@@ -183,59 +143,6 @@ void liberarBitacora(NodoEvento *l)
 }
 
 /*=========================================
-  ARBOL BINARIO
-=========================================*/
-
-/*
- * Crear nodo del arbol.
- * Pendiente de implementacion.
- */
-NodoArbol* crearNodoArbol(
-    const char *n,
-    double v
-)
-{
-    (void)n;
-    (void)v;
-
-    return NULL;
-}
-
-/*
- * Insertar nodo en el ABB.
- * Pendiente de implementacion.
- */
-NodoArbol* insertarArbol(
-    NodoArbol *r,
-    const char *n,
-    double v
-)
-{
-    (void)n;
-    (void)v;
-
-    return r;
-}
-
-/*
- * Mostrar recorrido del arbol.
- * Pendiente de implementacion.
- */
-void evaluarArbol(NodoArbol *r)
-{
-    (void)r;
-}
-
-/*
- * Liberar memoria del arbol.
- * Pendiente de implementacion.
- */
-void liberarArbol(NodoArbol *r)
-{
-    (void)r;
-}
-
-/*=========================================
   MAIN
 =========================================*/
 
@@ -273,6 +180,7 @@ int main(void)
         printf("4. Punto 3 - Trabajo\n");
         printf("5. Punto 4 - Combustible\n");
         printf("6. Mostrar bitacora\n");
+        printf("7. Punto 3 - Arbol de telemetria\n");
         printf("0. Salir\n");
         printf("====================================\n");
         printf("Seleccione una opcion: ");
@@ -379,6 +287,22 @@ int main(void)
 
                 /* Mostrar bitacora */
                 mostrarBitacora(bitacora);
+
+                break;
+
+            case 7:
+
+                /* Arbol de telemetria del Punto 3 */
+                if(!datos.cargado)
+                {
+                    printf(
+                        "\nPrimero debe cargar "
+                        "los datos.\n"
+                    );
+                    break;
+                }
+
+                arbol_mostrar_telemetria(arbol);
 
                 break;
 

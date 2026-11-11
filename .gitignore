@@ -1,0 +1,9 @@
+# Artefactos de compilacion
+*.exe
+*.o
+*.obj
+
+# Editor / sistema
+.vscode/
+.DS_Store
+Thumbs.db
