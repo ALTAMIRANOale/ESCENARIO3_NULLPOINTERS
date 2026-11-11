@@ -1,112 +1,272 @@
-//fijate en las dos lineas debajo que este comentario tiene un error que salta en VS 
+/*
+=================================================
+PROYECTO TLI - SIMULACION TIERRA-LUNA
+
+Responsabilidades actuales:
+- Menu principal
+- Validacion de entradas
+- Carga de datos
+
+Modulos integrados:
+- Punto 2 (Agustin): implementado en punto2.c
+
+Modulos pendientes:
+- Punto 1 (Altamirano)
+- Punto 3 (Axel)
+- Punto 4 (Agustin)
+
+Las constantes fisicas se encuentran definidas
+en tli.h y se cargan automaticamente.
+
+Cuando los integrantes entreguen sus modulos:
+1. Reemplazar los stubs de los puntos.
+2. Implementar lista enlazada de bitacora.
+3. Implementar arbol binario de evaluacion.
+=================================================
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
-#include "TLI.h"
 
-/* =====================================================
-   FUNCIONES AUXILIARES
-   ===================================================== */
+#include "tli.h"
 
-double leerDoublePositivo(const char mensaje[])
+/*=========================================
+  VALIDACION DE DATOS
+=========================================*/
+
+/* Lee un numero positivo evitando letras,
+   negativos y ceros */
+double leerDoublePositivo(const char *mensaje)
 {
     double valor;
+    int valido;
 
     do
     {
         printf("%s", mensaje);
 
-        if (scanf("%lf", &valor) != 1)
-        {
-            printf("Entrada invalida. Ingrese un numero.\n");
+        valido = scanf("%lf", &valor);
 
-            while (getchar() != '\n');
-            valor = -1;
-        }
-        else if (valor <= 0)
+        /* Limpia buffer */
+        while(getchar() != '\n');
+
+        if(valido != 1 || valor <= 0)
         {
-            printf("El valor debe ser mayor que cero.\n");
+            printf("Error. Ingrese un numero positivo.\n");
         }
 
-    } while (valor <= 0);
+    } while(valido != 1 || valor <= 0);
 
     return valor;
 }
 
+/*=========================================
+  CARGA DE DATOS
+=========================================*/
+
+/* Carga solamente los datos variables de
+   la simulacion */
 void cargarDatos(DatosTLI *datos)
 {
-    printf("\n========== CARGA DE DATOS ==========\n");
+    printf("\n====================================\n");
+    printf("      CARGA DE DATOS DE MISION\n");
+    printf("====================================\n");
 
-    datos->masaNave = leerDoublePositivo(
-        "Ingrese la masa de la nave (kg): "
-    );
+    printf("Constantes fisicas cargadas:\n");
+    printf("Masa Tierra........... %.3e kg\n", M_TIERRA);
+    printf("Masa Luna............. %.3e kg\n", M_LUNA);
+    printf("Radio Tierra.......... %.0f m\n", R_TIERRA);
+    printf("Distancia Tierra-Luna. %.0f m\n", DISTANCIA_TL);
 
-    datos->velocidadInicial = leerDoublePositivo(
-        "Ingrese la velocidad inicial (m/s): "
-    );
+    printf("\n");
+
+    datos->masaNave =
+        leerDoublePositivo(
+            "Ingrese masa de la nave (kg): "
+        );
+
+    datos->velocidadInicial =
+        leerDoublePositivo(
+            "Ingrese velocidad inicial (m/s): "
+        );
 
     datos->cargado = 1;
 
     printf("\nDatos cargados correctamente.\n");
-    printf("Masa: %.2f kg\n", datos->masaNave);
-    printf("Velocidad inicial: %.2f m/s\n",
-           datos->velocidadInicial);
-
-    printf("====================================\n");
 }
 
-/* =====================================================
-   STUBS TEMPORALES DE LOS PUNTOS DE LOS COMPAÑEROS
-   ===================================================== */
+/*=========================================
+  STUBS TEMPORALES
+=========================================*/
 
 /*
-   Estos stubs se mantienen solamente hasta que se
-   incorporen los archivos reales de los puntos 1 y 3.
-*/
-
-void punto1_leyNewton(DatosTLI datos, NodoEvento *bitacora)
+ * Reemplazar cuando Axel entregue
+ * el Punto 1.
+ */
+void punto1_leyNewton(DatosTLI d, NodoEvento **l)
 {
-    (void)datos;
-    (void)bitacora;
+    (void)d;
+    (void)l;
 
-    printf("\n[Punto 1: pendiente de integrar]\n");
+    printf("\n[Axel todavia no subio el Punto 1]\n");
 }
 
+/*
+ * Reemplazar cuando Dana entregue
+ * el Punto 3.
+ */
 void punto3_trabajo(
-    DatosTLI datos,
-    BalanceEnergetico balance,
-    NodoArbol **arbol
+    DatosTLI d,
+    BalanceEnergetico b,
+    NodoArbol **r
 )
 {
-    (void)datos;
-    (void)balance;
-    (void)arbol;
+    (void)d;
+    (void)b;
+    (void)r;
 
-    printf("\n[Punto 3: pendiente de integrar]\n");
+    printf("\n[Dana todavia no subio el Punto 3]\n");
 }
 
-/* =====================================================
-   PROGRAMA PRINCIPAL
-   ===================================================== */
+/*
+ * Reemplazar cuando Agustin entregue
+ * el Punto 4.
+ */
+void punto4_combustible(
+    DatosTLI d,
+    BalanceEnergetico b
+)
+{
+    (void)d;
+    (void)b;
+
+    printf("\n[Agustin todavia no subio el Punto 4]\n");
+}
+
+/*=========================================
+  BITACORA (LISTA ENLAZADA)
+=========================================*/
+
+/*
+ * Implementacion temporal.
+ * Aqui ira la logica real de la bitacora.
+ */
+void agregarEvento(
+    NodoEvento **l,
+    const char *x,
+    double t
+)
+{
+    (void)l;
+    (void)x;
+    (void)t;
+}
+
+/*
+ * Mostrar eventos registrados.
+ * Pendiente de implementacion.
+ */
+void mostrarBitacora(NodoEvento *l)
+{
+    (void)l;
+
+    printf("\n[Bitacora aun no implementada]\n");
+}
+
+/*
+ * Liberar memoria de la lista.
+ * Pendiente de implementacion.
+ */
+void liberarBitacora(NodoEvento *l)
+{
+    (void)l;
+}
+
+/*=========================================
+  ARBOL BINARIO
+=========================================*/
+
+/*
+ * Crear nodo del arbol.
+ * Pendiente de implementacion.
+ */
+NodoArbol* crearNodoArbol(
+    const char *n,
+    double v
+)
+{
+    (void)n;
+    (void)v;
+
+    return NULL;
+}
+
+/*
+ * Insertar nodo en el ABB.
+ * Pendiente de implementacion.
+ */
+NodoArbol* insertarArbol(
+    NodoArbol *r,
+    const char *n,
+    double v
+)
+{
+    (void)n;
+    (void)v;
+
+    return r;
+}
+
+/*
+ * Mostrar recorrido del arbol.
+ * Pendiente de implementacion.
+ */
+void evaluarArbol(NodoArbol *r)
+{
+    (void)r;
+}
+
+/*
+ * Liberar memoria del arbol.
+ * Pendiente de implementacion.
+ */
+void liberarArbol(NodoArbol *r)
+{
+    (void)r;
+}
+
+/*=========================================
+  MAIN
+=========================================*/
 
 int main(void)
 {
-    DatosTLI datos = {0, 0, 0};
-    BalanceEnergetico balance = {0, 0, 0, 0};
+    /* Datos generales de la simulacion */
+    DatosTLI datos = {0};
 
-    double historialEnergia[MAX_TELEMETRIA] = {0};
-    int cantidadHistorial = 0;
+    /* Resultado del balance energetico */
+    BalanceEnergetico balance = {0};
 
+    /* Lista de eventos */
     NodoEvento *bitacora = NULL;
+
+    /* Arbol de evaluacion */
     NodoArbol *arbol = NULL;
+
+    /* Historial de energias calculadas */
+    double historialEnergia[MAX_TELEMETRIA];
+
+    /* Cantidad de energias almacenadas */
+    int cantidadHistorial = 0;
 
     int opcion;
 
     do
     {
         printf("\n");
-        printf("========================================\n");
-        printf("       SIMULACION TIERRA-LUNA (TLI)\n");
-        printf("========================================\n");
+        printf("====================================\n");
+        printf("   SIMULADOR TLI TIERRA - LUNA\n");
+        printf("====================================\n");
         printf("1. Cargar datos de la nave\n");
         printf("2. Punto 1 - Ley de Newton\n");
         printf("3. Punto 2 - Energia\n");
@@ -114,103 +274,134 @@ int main(void)
         printf("5. Punto 4 - Combustible\n");
         printf("6. Mostrar bitacora\n");
         printf("0. Salir\n");
-        printf("========================================\n");
+        printf("====================================\n");
         printf("Seleccione una opcion: ");
 
-        if (scanf("%d", &opcion) != 1)
+        if(scanf("%d", &opcion) != 1)
         {
-            printf("\nEntrada invalida. Ingrese una opcion numerica.\n");
+            while(getchar() != '\n');
 
-            while (getchar() != '\n');
-
-            opcion = -1;
+            printf("\nOpcion invalida.\n");
             continue;
         }
 
-        switch (opcion)
+        while(getchar() != '\n');
+
+        switch(opcion)
         {
             case 1:
+
+                /* Carga inicial de datos */
                 cargarDatos(&datos);
+
                 break;
 
             case 2:
-                /* Punto 1 - Ley de Newton */
-                if (!datos.cargado)
+
+                /* Ejecuta Ley de Newton */
+                if(!datos.cargado)
                 {
-                    printf("\nPrimero debe cargar los datos.\n");
+                    printf(
+                        "\nPrimero debe cargar "
+                        "los datos.\n"
+                    );
                     break;
                 }
 
-                punto1_leyNewton(datos, &bitacora);
+                punto1_leyNewton(
+                    datos,
+                    &bitacora
+                );
+
                 break;
 
             case 3:
-                /* Punto 2 - Energia */
-                if (!datos.cargado)
+
+                /* Balance energetico */
+                if(!datos.cargado)
                 {
-                    printf("\nPrimero debe cargar los datos.\n");
+                    printf(
+                        "\nPrimero debe cargar "
+                        "los datos.\n"
+                    );
                     break;
                 }
 
-                balance = punto2_energia(
-                    datos,
-                    historialEnergia,
-                    &cantidadHistorial
-                );
+                balance =
+                    punto2_energia(
+                        datos,
+                        historialEnergia,
+                        &cantidadHistorial
+                    );
+
                 break;
 
             case 4:
-                /* Punto 3 - Trabajo */
-                if (!datos.cargado)
+
+                /* Trabajo mecanico */
+                if(!datos.cargado)
                 {
-                    printf("\nPrimero debe cargar los datos.\n");
+                    printf(
+                        "\nPrimero debe cargar "
+                        "los datos.\n"
+                    );
                     break;
                 }
 
-                punto3_trabajo(datos, balance, &arbol);
+                punto3_trabajo(
+                    datos,
+                    balance,
+                    &arbol
+                );
+
                 break;
 
             case 5:
-                /* Punto 4 - Combustible */
-                if (!datos.cargado)
+
+                /* Calculo de combustible */
+                if(!datos.cargado)
                 {
-                    printf("\nPrimero debe cargar los datos.\n");
+                    printf(
+                        "\nPrimero debe cargar "
+                        "los datos.\n"
+                    );
                     break;
                 }
 
-                punto4_combustible(datos, balance);
+                punto4_combustible(
+                    datos,
+                    balance
+                );
+
                 break;
 
             case 6:
-                printf("\n========== BITACORA ==========\n");
 
-                if (bitacora == NULL)
-                {
-                    printf("La bitacora esta vacia.\n");
-                }
-                else
-                {
-                    /*
-                       Aqui se debe llamar a la funcion que
-                       implementa el Punto 1 para mostrar
-                       la bitacora, cuando este integrada.
-                    */
-                    printf("La bitacora contiene eventos.\n");
-                }
+                /* Mostrar bitacora */
+                mostrarBitacora(bitacora);
 
-                printf("==============================\n");
                 break;
 
             case 0:
-                printf("\nFinalizando simulacion...\n");
+
+                printf(
+                    "\nFinalizando programa...\n"
+                );
+
                 break;
 
             default:
-                printf("\nOpcion incorrecta. Intente nuevamente.\n");
-                break;
+
+                printf(
+                    "\nOpcion no valida.\n"
+                );
         }
 
-    } while (opcion != 0);
+    } while(opcion != 0);
+
+    /* Liberacion final de memoria */
+    liberarBitacora(bitacora);
+    liberarArbol(arbol);
 
     return 0;
 }

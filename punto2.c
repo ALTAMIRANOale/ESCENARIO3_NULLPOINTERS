@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "TLI.h"
+#include "tli.h"
 
 BalanceEnergetico punto2_energia(DatosTLI d, double h[], int *c)
 {

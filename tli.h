@@ -179,6 +179,7 @@ BalanceEnergetico punto2_energia(
     double historialEnergia[],
     int *cantidad
 );
+
 /*
  * Punto 3
  * Trabajo mecánico
@@ -188,6 +189,7 @@ void punto3_trabajo(
     BalanceEnergetico balance,
     NodoArbol **raiz
 );
+
 /*
  * Punto 4
  * Consumo de combustible
