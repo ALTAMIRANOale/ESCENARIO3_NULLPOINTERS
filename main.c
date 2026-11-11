@@ -1,4 +1,4 @@
-
+//fijate en las dos lineas debajo que este comentario tiene un error que salta en VS 
 #include <stdio.h>
 #include <stdlib.h>
 #include "TLI.h"
