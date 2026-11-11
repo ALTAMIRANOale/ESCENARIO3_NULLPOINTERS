@@ -12,7 +12,7 @@ if errorlevel 1 (
     exit /b 1
 )
 
-gcc -std=c11 -Wall -Wextra -o tli.exe main.c punto2.c trabajo.c arbol.c validaciones.c tli_calculos.c tli_explicaciones.c
+gcc -std=c11 -Wall -Wextra -o tli.exe main.c punto2.c punto4.c trabajo.c arbol.c validaciones.c tli_calculos.c tli_explicaciones.c
 if errorlevel 1 (
     echo.
     echo [ERROR] Fallo la compilacion.

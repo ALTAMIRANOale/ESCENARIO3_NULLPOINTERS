@@ -9,10 +9,10 @@ Responsabilidades actuales:
 
 Modulos integrados:
 - Punto 2 (Agustin): implementado en punto2.c
+- Punto 4 (Agustin): implementado en punto4.c
 
 Modulos pendientes:
 - Punto 1 (Altamirano)
-- Punto 4 (Agustin)
 
 Modulo en desarrollo:
 - Punto 3 (Axel): trabajo, equilibrio
@@ -86,21 +86,6 @@ void punto1_leyNewton(DatosTLI d, NodoEvento **l)
     (void)l;
 
     printf("\n[Altamirano todavia no subio el Punto 1]\n");
-}
-
-/*
- * Reemplazar cuando Agustin entregue
- * el Punto 4.
- */
-void punto4_combustible(
-    DatosTLI d,
-    BalanceEnergetico b
-)
-{
-    (void)d;
-    (void)b;
-
-    printf("\n[Agustin todavia no subio el Punto 4]\n");
 }
 
 /*=========================================

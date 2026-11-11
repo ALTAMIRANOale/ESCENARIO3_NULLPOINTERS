@@ -10,7 +10,7 @@ CC       = gcc
 CFLAGS   = -std=c11 -Wall -Wextra
 LDFLAGS  =
 TARGET   = tli
-SRCS     = main.c punto2.c trabajo.c arbol.c validaciones.c tli_calculos.c tli_explicaciones.c
+SRCS     = main.c punto2.c punto4.c trabajo.c arbol.c validaciones.c tli_calculos.c tli_explicaciones.c
 OBJS     = $(SRCS:.c=.o)
 HEADERS  = tli.h trabajo.h arbol.h validaciones.h
 

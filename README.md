@@ -44,6 +44,7 @@ Constantes físicas utilizadas (definidas en `tli.h`):
 | `main.c` | Punto de entrada y menú principal |
 | `tli.h` | Constantes, estructuras y prototipos generales |
 | `punto2.c` | Punto 2 - Energía cinética |
+| `punto4.c` | Punto 4 - Consumo de combustible |
 | `trabajo.c` / `trabajo.h` | Punto 3 - Energía potencial, punto de equilibrio, trabajo externo |
 | `arbol.c` / `arbol.h` | Árbol de telemetría y reporte de equilibrio (ABB; AVL en la siguiente etapa) |
 | `validaciones.c` / `validaciones.h` | Validación centralizada de entradas |
@@ -71,7 +72,7 @@ build.bat
 ### Opción C - compilación manual
 
 ```sh
-gcc -std=c11 -Wall -Wextra -o tli.exe main.c punto2.c trabajo.c arbol.c validaciones.c tli_calculos.c tli_explicaciones.c -lm
+gcc -std=c11 -Wall -Wextra -o tli.exe main.c punto2.c punto4.c trabajo.c arbol.c validaciones.c tli_calculos.c tli_explicaciones.c -lm
 ```
 
 Requiere MinGW-w64 (por ejemplo, w64devkit) con `gcc` en el `PATH`.
@@ -114,4 +115,4 @@ comparar el costo de búsqueda `O(n)` (ABB desbalanceado) contra `O(log n)`
 - Punto 1: pendiente (Altamirano).
 - Punto 2: implementado.
 - Punto 3: trabajo, equilibrio y árbol de telemetría implementados (AVL pendiente).
-- Punto 4: pendiente (Agustín).
+- Punto 4: implementado.
