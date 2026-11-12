@@ -8,6 +8,9 @@ Responsabilidades actuales:
 - Carga de datos
 
 Modulos integrados:
+- Punto 1 (Altamirano): ley de Newton y
+  desaceleracion por tramos en
+  tli_explicaciones.c
 - Punto 2 (Agustin): implementado en punto2.c
 - Punto 3 (Axel): trabajo, equilibrio,
   telemetria y comparacion ABB / AVL
@@ -15,16 +18,10 @@ Modulos integrados:
 - Punto 4 (Agustin): implementado en punto4.c
 
 Modulos pendientes:
-- Punto 1 (Altamirano)
+- Lista enlazada de bitacora
 
 Las constantes fisicas se encuentran definidas
 en tli.h y se cargan automaticamente.
-
-Cuando los integrantes entreguen sus modulos:
-1. Reemplazar los stubs de los puntos.
-2. Implementar lista enlazada de bitacora.
-3. El arbol de telemetria del Punto 3
-   se encuentra en arbol.c.
 =================================================
 */
 
@@ -72,19 +69,97 @@ void cargarDatos(DatosTLI *datos)
 }
 
 /*=========================================
-  STUBS TEMPORALES
+  PUNTO 1 - LEY DE NEWTON
 =========================================*/
 
 /*
- * Reemplazar cuando Altamirano entregue
- * el Punto 1.
+ * Explica la primera ley de Newton y calcula
+ * la desaceleracion gravitatoria por tramos
+ * entre la orbita LEO y el punto L1.
  */
 void punto1_leyNewton(DatosTLI d, NodoEvento **l)
 {
-    (void)d;
-    (void)l;
+    NodoTrayectoria *trayectoria = NULL;
+    ResultadoBusquedaL1 busquedaL1;
+    double r0;
+    double rL1;
+    double aLEO;
+    double aL1;
+    double fuerzaLEO;
+    const int tramos = 10;
+    int i;
 
-    printf("\n[Altamirano todavia no subio el Punto 1]\n");
+    if (d.masaNave <= 0.0 || d.velocidadInicial <= 0.0)
+    {
+        printf("\nError: los datos de la nave no son validos.\n");
+        return;
+    }
+
+    explicar_primera_ley_newton();
+
+    r0 = R_TIERRA + H_LEO;
+
+    busquedaL1 = trabajo_buscar_L1(
+        L1_R_MIN,
+        L1_R_MAX,
+        L1_TOLERANCIA
+    );
+
+    if (busquedaL1.valido && busquedaL1.radio > r0)
+    {
+        rL1 = busquedaL1.radio;
+    }
+    else
+    {
+        rL1 = trabajo_radio_equilibrio_gravitatorio();
+
+        printf(
+            "\nAdvertencia: no se pudo validar L1; "
+            "se usa r_eq como referencia.\n"
+        );
+    }
+
+    aLEO = calcular_desaceleracion_gravitatoria(r0);
+    aL1 = calcular_desaceleracion_gravitatoria(rL1);
+    fuerzaLEO = d.masaNave * aLEO;
+
+    printf("\nDatos de la nave:\n");
+    printf("Masa: %.2f kg\n", d.masaNave);
+    printf("Velocidad inicial: %.2f m/s\n", d.velocidadInicial);
+    printf("Cantidad de movimiento (p = m*v): %.6e kg*m/s\n",
+           d.masaNave * d.velocidadInicial);
+    printf("Radio de LEO (r0): %.0f m\n", r0);
+    printf("Radio de L1 (rL1): %.0f m\n", rL1);
+
+    printf("\nDesaceleracion gravitatoria terrestre (a = G*M/r^2):\n");
+    printf("En LEO: %.6f m/s^2\n", aLEO);
+    printf("En L1:  %.6f m/s^2\n", aL1);
+    printf("Fuerza gravitatoria en LEO: %.6e N\n", fuerzaLEO);
+    printf("La aceleracion disminuye con el cuadrado de la distancia:\n");
+    printf("la desaceleracion es cada vez menor a medida que la nave se aleja.\n");
+
+    for (i = 0; i <= tramos; i++)
+    {
+        double r;
+
+        r = r0 + (rL1 - r0) * (double) i / (double) tramos;
+
+        insertar_tramo(&trayectoria, r);
+    }
+
+    mostrar_trayectoria_lista(trayectoria);
+
+    liberar_lista(trayectoria);
+    trayectoria = NULL;
+
+    printf("\nLa lista enlazada almaceno %d tramos entre LEO y L1.\n",
+           tramos + 1);
+    printf("La nave mantiene su inercia; solo la gravedad terrestre la frena.\n");
+
+    if (l != NULL)
+    {
+        agregarEvento(l, "Punto 1 - Ley de Newton ejecutado", 0.0);
+    }
 }
 
 /*=========================================

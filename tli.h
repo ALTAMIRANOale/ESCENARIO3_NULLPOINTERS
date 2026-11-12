@@ -244,9 +244,8 @@ double leerDoublePositivo(
 
 /*=========================================
   PUNTO 1 - LISTA DE TRAYECTORIA
-  Propuesta inicial de Alejandro.
-  Las operaciones de la lista quedan
-  pendientes de implementacion.
+  Registra la desaceleracion gravitatoria
+  por tramos entre LEO y L1.
 =========================================*/
 
 typedef struct NodoTrayectoria
@@ -265,7 +264,7 @@ void justificar_diferencia_combustible(void);
 double calcular_energia_potencial(double masa, double r);
 double calcular_trabajo_minimo(double masa, double altitud_leo);
 
-/* Operaciones de la lista de trayectoria (pendientes) */
+/* Operaciones de la lista de trayectoria */
 NodoTrayectoria *crear_nodo(double distancia);
 void insertar_tramo(NodoTrayectoria **cabeza, double distancia);
 void mostrar_trayectoria_lista(NodoTrayectoria *cabeza);
