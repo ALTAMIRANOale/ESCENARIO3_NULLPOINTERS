@@ -49,7 +49,7 @@ double calcular_desaceleracion_gravitatoria(double distancia) {
 
 // Crea un nuevo nodo para la lista enlazada de tramos
 NodoTrayectoria* crear_nodo(double distancia) {
-    Nodo* nuevo = (Nodo*) malloc(sizeof(NodoTrayectoria));
+    NodoTrayectoria* nuevo = (NodoTrayectoria*) malloc(sizeof(NodoTrayectoria));
     if (nuevo == NULL) {
         printf("Error: No se pudo asignar memoria para el nodo.\n");
         exit(1);
