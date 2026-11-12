@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "tli.h"
 
@@ -24,4 +25,37 @@ void justificar_diferencia_combustible(void) {
     printf("terrestre y alcanzar una velocidad de ~10.9 km/s desde LEO, exigiendo una cantidad masiva de propelente.\n");
     printf("Para el regreso desde la Luna, la velocidad de escape lunar es de solo ~2.38 km/s, requiriendo\n");
     printf("significativamente menos energia y combustible.\n");
+}
+
+
+void explicar_primera_ley_newton(void) {
+    printf("\n===================================================\n");
+    printf("  1. PRIMERA LEY DE NEWTON Y DESACELERACION TLI   \n");
+    printf("===================================================\n");
+    printf("-> Una vez apagados los propulsores de la etapa ICPS y desacoplada,\n");
+    printf("   la nave Orion (m = 26.000 kg) se desplaza por el espacio debido a su INERCIA\n");
+    printf("   (Principio de Inercia: un cuerpo mantiene su estado de movimiento a menos que\n");
+    printf("   una fuerza externa actue sobre el).\n");
+    printf("-> Sin embargo, la fuerza gravitatoria de la Tierra actua de manera opuesta al\n");
+    printf("   vector velocidad, generando una DESACELERACION PROGRESSIVA que reduce\n");
+    printf("   lentamente su velocidad conforme aumenta la distancia 'r'.\n");
+}
+
+// Calcula la desaceleración gravitatoria en un punto dado: a = (G * M) / r^2
+double calcular_desaceleracion_gravitatoria(double distancia) {
+    if (distancia <= 0) return 0.0;
+    return (G_CONST * M_TIERRA) / (distancia * distancia);
+}
+
+// Crea un nuevo nodo para la lista enlazada de tramos
+NodoTrayectoria* crear_nodo(double distancia) {
+    Nodo* nuevo = (Nodo*) malloc(sizeof(NodoTrayectoria));
+    if (nuevo == NULL) {
+        printf("Error: No se pudo asignar memoria para el nodo.\n");
+        exit(1);
+    }
+    nuevo->distancia_centro = distancia;
+    nuevo->desaceleracion = calcular_desaceleracion_gravitatoria(distancia);
+    nuevo->siguiente = NULL;
+    return nuevo;
 }
