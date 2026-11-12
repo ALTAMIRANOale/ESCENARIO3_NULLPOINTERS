@@ -240,4 +240,33 @@ double leerDoublePositivo(
     const char *mensaje
 );
 
+/*=========================================
+  PUNTO 1 - LISTA DE TRAYECTORIA
+  Propuesta inicial de Alejandro.
+  Las operaciones de la lista quedan
+  pendientes de implementacion.
+=========================================*/
+
+typedef struct NodoTrayectoria
+{
+    double distancia_centro;
+    double desaceleracion;
+    struct NodoTrayectoria *siguiente;
+
+} NodoTrayectoria;
+
+/* Funciones ya implementadas en los modulos legados */
+void explicar_primera_ley_newton(void);
+double calcular_desaceleracion_gravitatoria(double distancia);
+double calcular_energia_cinetica(double masa, double velocidad);
+void justificar_diferencia_combustible(void);
+double calcular_energia_potencial(double masa, double r);
+double calcular_trabajo_minimo(double masa, double altitud_leo);
+
+/* Operaciones de la lista de trayectoria (pendientes) */
+NodoTrayectoria *crear_nodo(double distancia);
+void insertar_tramo(NodoTrayectoria **cabeza, double distancia);
+void mostrar_trayectoria_lista(NodoTrayectoria *cabeza);
+void liberar_lista(NodoTrayectoria *cabeza);
+
 #endif
