@@ -59,3 +59,39 @@ NodoTrayectoria* crear_nodo(double distancia) {
     nuevo->siguiente = NULL;
     return nuevo;
 }
+// Inserta un tramo al final de la lista enlazada
+void insertar_tramo(NodoTrayectoria** cabeza, double distancia) {
+    NodoTrayectoria* nuevo = crear_nodo(distancia);
+    if (*cabeza == NULL) {
+        *cabeza = nuevo;
+    } else {
+        NodoTrayectoria* actual = *cabeza;
+        while (actual->siguiente != NULL) {
+            actual = actual->siguiente;
+        }
+        actual->siguiente = nuevo;
+    }
+}
+
+// Recorre la lista enlazada mostrando la desaceleración por tramos
+void mostrar_trayectoria_lista(NodoTrayectoria* cabeza) {
+    printf("\n--- REGISTRO DE DESACELERACION POR TRAMOS (LISTA ENLAZADA) ---\n");
+    NodoTrayectoria* actual = cabeza;
+    int tramo = 1;
+    while (actual != NULL) {
+        printf(" Tramo %d -> Distancia al centro: %.2f km | Desaceleracion: %.6f m/s^2\n", 
+                tramo, actual->distancia_centro / 1000.0, actual->desaceleracion);
+        actual = actual->siguiente;
+        tramo++;
+    }
+}
+
+// Libera la memoria de la lista enlazada para evitar fugas de memoria (buena práctica en C)
+void liberar_lista(NodoTrayectoria* cabeza) {
+    NodoTrayectoria* actual = cabeza;
+    while (actual != NULL) {
+        NodoTrayectoria* temp = actual;
+        actual = actual->siguiente;
+        free(temp);
+    }
+}
