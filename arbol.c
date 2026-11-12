@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "arbol.h"
 
@@ -59,6 +60,88 @@ static NodoArbol *arbol_insertar_nodo_abb(
 }
 
 /*=========================================
+  ROTACIONES Y BALANCEO AVL
+=========================================*/
+
+static NodoArbol *arbol_rotar_derecha(NodoArbol *y)
+{
+    NodoArbol *x;
+    NodoArbol *subarbol;
+
+    if (y == NULL || y->izq == NULL)
+    {
+        return y;
+    }
+
+    x = y->izq;
+    subarbol = x->der;
+
+    x->der = y;
+    y->izq = subarbol;
+
+    arbol_actualizar_altura(y);
+    arbol_actualizar_altura(x);
+
+    return x;
+}
+
+static NodoArbol *arbol_rotar_izquierda(NodoArbol *x)
+{
+    NodoArbol *y;
+    NodoArbol *subarbol;
+
+    if (x == NULL || x->der == NULL)
+    {
+        return x;
+    }
+
+    y = x->der;
+    subarbol = y->izq;
+
+    y->izq = x;
+    x->der = subarbol;
+
+    arbol_actualizar_altura(x);
+    arbol_actualizar_altura(y);
+
+    return y;
+}
+
+static NodoArbol *arbol_balancear(NodoArbol *nodo)
+{
+    int factor;
+
+    if (nodo == NULL)
+    {
+        return NULL;
+    }
+
+    factor = arbol_factor_balance(nodo);
+
+    if (factor > 1)
+    {
+        if (arbol_factor_balance(nodo->izq) < 0)
+        {
+            nodo->izq = arbol_rotar_izquierda(nodo->izq);
+        }
+
+        return arbol_rotar_derecha(nodo);
+    }
+
+    if (factor < -1)
+    {
+        if (arbol_factor_balance(nodo->der) > 0)
+        {
+            nodo->der = arbol_rotar_derecha(nodo->der);
+        }
+
+        return arbol_rotar_izquierda(nodo);
+    }
+
+    return nodo;
+}
+
+/*=========================================
   OPERACIONES BASICAS
 =========================================*/
 
@@ -93,8 +176,62 @@ int arbol_contar_nodos(const NodoArbol *raiz)
            arbol_contar_nodos(raiz->der);
 }
 
-int arbol_es_avl(const NodoArbol *raiz)
+static int arbol_verificar_abb_rec(
+    const NodoArbol *raiz,
+    int tieneMinimo,
+    double minimo,
+    int tieneMaximo,
+    double maximo
+)
 {
+    if (raiz == NULL)
+    {
+        return 1;
+    }
+
+    /*
+     * Convencion: izquierda <= nodo <= derecha.
+     *
+     * La insercion manda las claves iguales a la derecha,
+     * pero las rotaciones AVL pueden dejarlas a la izquierda.
+     * Por eso la verificacion acepta duplicados en ambos lados
+     * y solo exige que el recorrido inorden sea no decreciente.
+     */
+    if (tieneMinimo && raiz->valor < minimo)
+    {
+        return 0;
+    }
+
+    if (tieneMaximo && raiz->valor > maximo)
+    {
+        return 0;
+    }
+
+    return arbol_verificar_abb_rec(
+               raiz->izq,
+               tieneMinimo,
+               minimo,
+               1,
+               raiz->valor
+           ) &&
+           arbol_verificar_abb_rec(
+               raiz->der,
+               1,
+               raiz->valor,
+               tieneMaximo,
+               maximo
+           );
+}
+
+int arbol_verificar_abb(const NodoArbol *raiz)
+{
+    return arbol_verificar_abb_rec(raiz, 0, 0.0, 0, 0.0);
+}
+
+static int arbol_verificar_avl_rec(const NodoArbol *raiz)
+{
+    int alturaIzquierda;
+    int alturaDerecha;
     int factor;
 
     if (raiz == NULL)
@@ -102,14 +239,33 @@ int arbol_es_avl(const NodoArbol *raiz)
         return 1;
     }
 
-    factor = arbol_factor_balance(raiz);
+    alturaIzquierda = arbol_altura(raiz->izq);
+    alturaDerecha = arbol_altura(raiz->der);
+
+    if (raiz->altura != 1 + arbol_maximo(alturaIzquierda, alturaDerecha))
+    {
+        return 0;
+    }
+
+    factor = alturaIzquierda - alturaDerecha;
 
     if (factor < -1 || factor > 1)
     {
         return 0;
     }
 
-    return arbol_es_avl(raiz->izq) && arbol_es_avl(raiz->der);
+    return arbol_verificar_avl_rec(raiz->izq) &&
+           arbol_verificar_avl_rec(raiz->der);
+}
+
+int arbol_verificar_avl(const NodoArbol *raiz)
+{
+    return arbol_verificar_abb(raiz) && arbol_verificar_avl_rec(raiz);
+}
+
+int arbol_es_avl(const NodoArbol *raiz)
+{
+    return arbol_verificar_avl(raiz);
 }
 
 /*=========================================
@@ -159,6 +315,11 @@ NodoArbol *arbol_insertar_abb(
     const MuestraTelemetria *muestra
 )
 {
+    if (muestra == NULL)
+    {
+        return raiz;
+    }
+
     if (raiz == NULL)
     {
         return arbol_crear_muestra(muestra);
@@ -176,6 +337,35 @@ NodoArbol *arbol_insertar_abb(
     arbol_actualizar_altura(raiz);
 
     return raiz;
+}
+
+NodoArbol *arbol_insertar_avl(
+    NodoArbol *raiz,
+    const MuestraTelemetria *muestra
+)
+{
+    if (muestra == NULL)
+    {
+        return raiz;
+    }
+
+    if (raiz == NULL)
+    {
+        return arbol_crear_muestra(muestra);
+    }
+
+    if (muestra->distancia < raiz->muestra.distancia)
+    {
+        raiz->izq = arbol_insertar_avl(raiz->izq, muestra);
+    }
+    else
+    {
+        raiz->der = arbol_insertar_avl(raiz->der, muestra);
+    }
+
+    arbol_actualizar_altura(raiz);
+
+    return arbol_balancear(raiz);
 }
 
 /*=========================================
@@ -219,6 +409,108 @@ NodoArbol *arbol_buscar(
     }
 
     return actual;
+}
+
+NodoArbol *arbol_buscar_mas_cercano(
+    NodoArbol *raiz,
+    double clave,
+    int *comparaciones
+)
+{
+    NodoArbol *actual;
+    NodoArbol *mejor;
+    double mejorDiferencia;
+    int contador;
+
+    actual = raiz;
+    mejor = NULL;
+    mejorDiferencia = 0.0;
+    contador = 0;
+
+    while (actual != NULL)
+    {
+        double diferencia;
+
+        contador++;
+        diferencia = fabs(actual->muestra.distancia - clave);
+
+        if (mejor == NULL || diferencia < mejorDiferencia)
+        {
+            mejor = actual;
+            mejorDiferencia = diferencia;
+        }
+
+        if (clave == actual->muestra.distancia)
+        {
+            break;
+        }
+
+        if (clave < actual->muestra.distancia)
+        {
+            actual = actual->izq;
+        }
+        else
+        {
+            actual = actual->der;
+        }
+    }
+
+    if (comparaciones != NULL)
+    {
+        *comparaciones = contador;
+    }
+
+    return mejor;
+}
+
+void arbol_estadisticas_busqueda(
+    NodoArbol *raiz,
+    const MuestraTelemetria muestras[],
+    int cantidad,
+    EstadisticasBusqueda *estadisticas
+)
+{
+    int i;
+
+    if (estadisticas == NULL)
+    {
+        return;
+    }
+
+    memset(estadisticas, 0, sizeof(EstadisticasBusqueda));
+
+    if (raiz == NULL || muestras == NULL || cantidad <= 0)
+    {
+        return;
+    }
+
+    for (i = 0; i < cantidad; i++)
+    {
+        int comparaciones;
+        NodoArbol *encontrado;
+
+        encontrado = arbol_buscar(
+            raiz,
+            muestras[i].distancia,
+            &comparaciones
+        );
+
+        estadisticas->totalComparaciones += comparaciones;
+
+        if (comparaciones > estadisticas->maxComparaciones)
+        {
+            estadisticas->maxComparaciones = comparaciones;
+        }
+
+        if (encontrado != NULL)
+        {
+            estadisticas->encontrados++;
+        }
+    }
+
+    estadisticas->promedioComparaciones =
+        (double) estadisticas->totalComparaciones /
+        (double) cantidad;
 }
 
 /*=========================================

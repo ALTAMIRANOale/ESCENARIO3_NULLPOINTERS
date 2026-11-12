@@ -207,10 +207,12 @@ BalanceEnergetico punto2_energia(
  * Punto 3
  * Trabajo mecánico
  */
+struct TelemetriaPunto3;
+
 void punto3_trabajo(
     DatosTLI datos,
     BalanceEnergetico balance,
-    NodoArbol **raiz
+    struct TelemetriaPunto3 *telemetria
 );
 /*
  * Punto 4

@@ -9,14 +9,13 @@ Responsabilidades actuales:
 
 Modulos integrados:
 - Punto 2 (Agustin): implementado en punto2.c
+- Punto 3 (Axel): trabajo, equilibrio,
+  telemetria y comparacion ABB / AVL
+  en trabajo.c / arbol.c
 - Punto 4 (Agustin): implementado en punto4.c
 
 Modulos pendientes:
 - Punto 1 (Altamirano)
-
-Modulo en desarrollo:
-- Punto 3 (Axel): trabajo, equilibrio
-  y arbol AVL en trabajo.c / arbol.c
 
 Las constantes fisicas se encuentran definidas
 en tli.h y se cargan automaticamente.
@@ -142,8 +141,8 @@ int main(void)
     /* Lista de eventos */
     NodoEvento *bitacora = NULL;
 
-    /* Arbol de evaluacion */
-    NodoArbol *arbol = NULL;
+    /* Telemetria y arboles del Punto 3 */
+    TelemetriaPunto3 telemetria = {0};
 
     /* Historial de energias calculadas */
     double historialEnergia[MAX_TELEMETRIA];
@@ -165,7 +164,8 @@ int main(void)
         printf("4. Punto 3 - Trabajo\n");
         printf("5. Punto 4 - Combustible\n");
         printf("6. Mostrar bitacora\n");
-        printf("7. Punto 3 - Arbol de telemetria\n");
+        printf("7. Punto 3 - Arboles ABB y AVL\n");
+        printf("8. Punto 3 - Verificar resultados\n");
         printf("0. Salir\n");
         printf("====================================\n");
         printf("Seleccione una opcion: ");
@@ -244,7 +244,7 @@ int main(void)
                 punto3_trabajo(
                     datos,
                     balance,
-                    &arbol
+                    &telemetria
                 );
 
                 break;
@@ -277,7 +277,7 @@ int main(void)
 
             case 7:
 
-                /* Arbol de telemetria del Punto 3 */
+                /* Arboles ABB y AVL del Punto 3 */
                 if(!datos.cargado)
                 {
                     printf(
@@ -287,7 +287,14 @@ int main(void)
                     break;
                 }
 
-                arbol_mostrar_telemetria(arbol);
+                punto3_mostrar_arboles(&telemetria);
+
+                break;
+
+            case 8:
+
+                /* Autoverificacion del Punto 3 */
+                trabajo_verificar();
 
                 break;
 
@@ -310,7 +317,7 @@ int main(void)
 
     /* Liberacion final de memoria */
     liberarBitacora(bitacora);
-    liberarArbol(arbol);
+    punto3_liberar_telemetria(&telemetria);
 
     return 0;
 }
