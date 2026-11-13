@@ -3,12 +3,67 @@
 ## Simulación TLI (Tierra - Luna) - Trabajo Final Integrador
 
 **Materia:** Algoritmos y Estructuras de Datos
+**Comisión:** K1.3 "C"
 **Escenario:** Inyección Translunar (TLI) e inercia en trayectoria libre
 **Lenguaje:** C (C11)
+**Repositorio:** [ALTAMIRANOale/ESCENARIO3_NULLPOINTERS](https://github.com/ALTAMIRANOale/ESCENARIO3_NULLPOINTERS)
 
 ---
 
-## 1. Datos del escenario
+## 1. Integrantes y comisión
+
+**Comisión:** K1.3 "C"
+
+| Integrante |
+|---|---|
+| Altamirano Alejandro 
+| Baez Dana Paola 
+| Lazarczuk Agustín 
+| Ferreira Axel 
+
+---
+
+## 2. Escenario Artemis y reglas del juego
+
+### 2.1 Situación - Problema 3: Inyección Translunar (TLI)
+
+La nave Orion se encuentra en una órbita baja terrestre (LEO), a una altitud
+de `h = 192.000 m`. La etapa superior ICPS ejecuta la maniobra de Inyección
+Translunar (TLI) y la impulsa hasta una velocidad de inyección de
+`v_TLI = 10.900 m/s`.
+
+Inmediatamente después del encendido, la etapa ICPS se desacopla y los motores
+principales se apagan por completo. A partir de ese momento la nave no tiene
+propulsión y entra en una trayectoria de retorno libre (Free Return
+Trajectory) hacia la Luna, ubicada a una distancia media Tierra - Luna de
+`D = 384.000.000 m`. La masa de Orion es `m = 26.000 kg`.
+
+De acuerdo con la 1.ª Ley de Newton (Ley de Inercia), la nave mantiene su
+estado de movimiento mientras la fuerza gravitatoria terrestre actúa en
+sentido opuesto a la velocidad, produciendo una desaceleración progresiva que
+disminuye a medida que la distancia aumenta.
+
+### 2.2 Reglas del juego y restricciones del modelo
+
+- Solo se consideran la Tierra y la Luna.
+- El movimiento se analiza sobre la línea que une ambos cuerpos.
+- La Luna se modela en un marco rotante con velocidad angular constante.
+- Después de la TLI no hay propulsión: la nave se mueve por inercia.
+- La masa de la nave se mantiene constante durante la simulación.
+- El trabajo se calcula cuasiestáticamente como variación de energía potencial.
+- El tiempo de telemetría es una estimación radial, no una integración orbital completa.
+- Los datos de entrada deben ser positivos; el programa permite usar los valores de ejemplo.
+
+### 2.3 Consignas que responde el programa
+
+1. Explicar el comportamiento de la nave por la 1.ª Ley de Newton y describir la desaceleración gravitatoria terrestre.
+2. Calcular la energía cinética inicial de Orion para `v = 10.900 m/s`.
+3. Determinar el trabajo externo mínimo por unidad de masa para pasar de LEO al punto de equilibrio gravitatorio Tierra - Luna.
+4. Justificar energéticamente por qué se requiere más combustible para viajar de la Tierra a la Luna que para el regreso Luna - Tierra.
+
+---
+
+## 3. Datos del escenario
 
 | Magnitud | Valor |
 |---|---|
@@ -26,18 +81,7 @@ Constantes físicas utilizadas (definidas en `tli.h`):
 
 ---
 
-## 2. Integrantes y aportes
-
-| Integrante | Aporte |
-|---|---|
-| Altamirano | Punto 1 - Primera Ley de Newton y desaceleración gravitatoria |
-| Agustín | Punto 2 - Balance energético / Punto 4 - Combustible |
-| Dana | Menú, estructura general y bitácora |
-| Axel | **Punto 3 - Trabajo y equilibrio + telemetría ABB / AVL** |
-
----
-
-## 3. Módulos del proyecto
+## 4. Módulos del proyecto
 
 | Archivo | Responsabilidad |
 |---|---|
@@ -53,33 +97,42 @@ Constantes físicas utilizadas (definidas en `tli.h`):
 
 ---
 
-## 4. Compilación
+## 5. Funcionamiento general
 
-### Opción A - Makefile (recomendado)
+El programa es un simulador de consola. Al iniciar muestra un menú y mantiene
+los datos de la misión y la bitácora en memoria hasta que se elige la opción
+`0` (Salir).
 
-```sh
-mingw32-make
-mingw32-make run
-mingw32-make clean
-```
+| Opción | Acción |
+|---|---|
+| `1` | Carga la masa de la nave y la velocidad inicial. Permite aceptar los valores de ejemplo con Enter. |
+| `2` | Explica la 1.ª Ley de Newton y calcula la desaceleración gravitatoria por tramos entre LEO y L1. |
+| `3` | Calcula la energía cinética inicial de Orion. |
+| `4` | Calcula trabajo, equilibrio gravitatorio, telemetría y comparación ABB / AVL. |
+| `5` | Presenta la justificación energética del consumo de combustible. |
+| `6` | Muestra la bitácora de eventos registrados durante la sesión. |
+| `7` | Muestra el detalle de los árboles ABB y AVL construidos con la telemetría. |
+| `8` | Ejecuta las autopruebas del Punto 3 contra los valores de control. |
+| `0` | Finaliza el programa y libera la memoria utilizada. |
 
-### Opción B - script de Windows
+Las opciones de cálculo (`2` a `5` y `7`) requieren haber cargado los datos
+primero. La bitácora registra cada acción relevante con un número de evento y
+un tiempo simulado.
 
-```bat
-build.bat
-```
+### Flujo recomendado
 
-### Opción C - compilación manual
-
-```sh
-gcc -std=c11 -Wall -Wextra -o tli.exe main.c punto2.c punto4.c trabajo.c arbol.c validaciones.c tli_calculos.c tli_explicaciones.c -lm
-```
-
-Requiere MinGW-w64 (por ejemplo, w64devkit) con `gcc` en el `PATH`.
+1. Opción `1`: cargar los datos (Enter para usar `26.000 kg` y `10.900 m/s`).
+2. Opción `2`: analizar la Ley de Newton y la desaceleración.
+3. Opción `3`: obtener la energía cinética inicial.
+4. Opción `4`: calcular trabajo, equilibrio y comparación de árboles.
+5. Opción `5`: ver la justificación del combustible.
+6. Opción `6`: revisar la bitácora.
+7. Opción `7`: ver el detalle de los árboles.
+8. Opción `8`: ejecutar las autopruebas.
 
 ---
 
-## 5. Menú del Punto 3
+## 6. Punto 3: trabajo, equilibrio y árboles
 
 | Opción | Acción |
 |---|---|
@@ -99,7 +152,7 @@ por lo que no se duplica lógica ni se recalculan los datos.
 
 ---
 
-## 6. Relación entre trabajo, equilibrio y árboles
+## 7. Relación entre trabajo, equilibrio y árboles
 
 El Punto 3 trabaja un mismo concepto desde dos perspectivas:
 
@@ -118,7 +171,7 @@ para comparar el costo de búsqueda `O(n)` contra `O(log n)`.
 
 ---
 
-## 7. Modelo físico y fórmulas
+## 8. Modelo físico y fórmulas
 
 ### Potencial gravitatorio total
 
@@ -181,7 +234,7 @@ potencial efectivo. Ambos resultan inestables en este modelo.
 
 ---
 
-## 8. Comparación ABB vs AVL
+## 9. Comparación ABB vs AVL
 
 Las muestras se insertan en orden creciente de distancia. Eso degenera el ABB
 en una lista, mientras que el AVL se mantiene balanceado mediante rotaciones.
@@ -202,7 +255,7 @@ La altura teórica máxima esperada para un AVL de 100 nodos es aproximadamente
 
 ---
 
-## 9. Valores de control
+## 10. Valores de control
 
 | Resultado | Valor esperado |
 |---|---|
@@ -217,4 +270,94 @@ La altura teórica máxima esperada para un AVL de 100 nodos es aproximadamente
 Las autopruebas de la opción `8` verifican estos valores, la clasificación del
 equilibrio, la conservación de energía, la altura del AVL, el orden del ABB y la
 reducción de comparaciones.
+
+---
+
+## 11. Compilación y ejecución
+
+### Opción A - Makefile (recomendado)
+
+```sh
+mingw32-make
+mingw32-make run
+mingw32-make clean
+```
+
+### Opción B - script de Windows
+
+```bat
+build.bat
+```
+
+### Opción C - compilación manual
+
+```sh
+gcc -std=c11 -Wall -Wextra -o tli.exe main.c punto2.c punto4.c trabajo.c arbol.c validaciones.c tli_calculos.c tli_explicaciones.c -lm
+```
+
+Requiere MinGW-w64 (por ejemplo, w64devkit) con `gcc` en el `PATH`.
+
+### Ejecución
+
+Desde la raíz del proyecto, en Windows:
+
+```powershell
+.\tli.exe
+```
+
+También se puede ejecutar con doble clic sobre `tli.exe` o usando el objetivo
+`run` del Makefile:
+
+```sh
+mingw32-make run
+```
+
+Al iniciar, elegir la opción `1` y presionar Enter dos veces para usar los
+valores de ejemplo (`26.000 kg` y `10.900 m/s`). Luego recorrer las opciones
+en el orden indicado en la sección 5.
+
+---
+
+## 12. Verificación rápida
+
+```sh
+mingw32-make
+mingw32-make run
+```
+
+Luego:
+
+1. Opción `1`: presionar Enter para usar los valores de ejemplo (`26000` kg y `10900` m/s).
+2. Opción `2`: verificar la Ley de Newton y la tabla de desaceleración.
+3. Opción `3`: verificar la energía cinética inicial.
+4. Opción `4`: verificar trabajo, equilibrio y comparación ABB / AVL.
+5. Opción `5`: verificar la justificación del combustible.
+6. Opción `6`: verificar la bitácora de eventos.
+7. Opción `7`: verificar el detalle de los árboles.
+8. Opción `8`: ejecutar las autopruebas.
+
+Resultado esperado de las autopruebas: `22/22 pruebas OK`.
+
+---
+
+## 13. Registro del uso de Inteligencia Artificial
+
+El equipo utilizó asistentes de IA generativa como herramienta de apoyo para
+generar ideas, revisar código y mejorar la documentación. La IA no reemplazó el
+análisis del equipo: cada sugerencia fue revisada, adaptada y validada con la
+compilación y las autopruebas del programa.
+
+| Herramienta | Ámbito | Uso concreto | Verificación realizada |
+|---|---|---|---|
+
+| Asistente de IA para análisis | Ideas y explicación teórica | Propuestas para organizar el escenario, las consignas y la explicación del modelo físico | Contraste de fórmulas y valores con los resultados del programa y los valores de control |
+| Asistente de IA para código | Depuración y mejoras | Sugerencias de nombres, mensajes, validaciones y organización modular | Compilación con `-Wall -Wextra` y pruebas de las opciones del menú |
+
+**Registro de consultas y decisiones:** las consultas se orientaron a entender
+el escenario, proponer la estructura del README, revisar fórmulas y detectar
+errores de compilación o de ejecución. Las respuestas se contrastaron con el
+código fuente y con los resultados de las autopruebas; las sugerencias que no
+coincidían con el modelo del proyecto se descartaron o se adaptaron.
+
+
 
