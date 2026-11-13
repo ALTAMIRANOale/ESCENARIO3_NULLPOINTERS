@@ -32,6 +32,49 @@ double leerDoublePositivo(const char *mensaje)
     return valor;
 }
 
+/* Lee un numero positivo mostrando un valor
+   de ejemplo. Si se presiona Enter, usa el
+   valor de ejemplo. */
+double leerDoublePositivoConEjemplo(
+    const char *mensaje,
+    double ejemplo
+)
+{
+    char linea[100];
+    char *inicio;
+    double valor;
+
+    while(1)
+    {
+        printf("%s [ejemplo: %.0f]: ", mensaje, ejemplo);
+
+        if(fgets(linea, sizeof(linea), stdin) == NULL)
+        {
+            return ejemplo;
+        }
+
+        inicio = linea;
+
+        while(*inicio == ' ' || *inicio == '\t')
+        {
+            inicio++;
+        }
+
+        /* Enter sin datos: se usa el ejemplo */
+        if(*inicio == '\n' || *inicio == '\r' || *inicio == '\0')
+        {
+            return ejemplo;
+        }
+
+        if(sscanf(inicio, "%lf", &valor) == 1 && valor > 0)
+        {
+            return valor;
+        }
+
+        printf("Error. Ingrese un numero positivo o presione Enter.\n");
+    }
+}
+
 /* Lee un numero dentro de un rango cerrado */
 double leerDoubleEnRango(
     const char *mensaje,

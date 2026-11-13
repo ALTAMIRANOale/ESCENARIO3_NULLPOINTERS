@@ -17,8 +17,8 @@ Modulos integrados:
   en trabajo.c / arbol.c
 - Punto 4 (Agustin): implementado en punto4.c
 
-Modulos pendientes:
-- Lista enlazada de bitacora
+La bitacora de eventos se implementa como
+lista enlazada simple dentro de main.c.
 
 Las constantes fisicas se encuentran definidas
 en tli.h y se cargan automaticamente.
@@ -51,21 +51,30 @@ void cargarDatos(DatosTLI *datos)
     printf("Radio Tierra.......... %.0f m\n", R_TIERRA);
     printf("Distancia Tierra-Luna. %.0f m\n", DISTANCIA_TL);
 
+    printf("\nValores de ejemplo (presione Enter para usarlos):\n");
+    printf("Masa de la nave....... 26000 kg\n");
+    printf("Velocidad inicial..... 10900 m/s\n");
+
     printf("\n");
 
     datos->masaNave =
-        leerDoublePositivo(
-            "Ingrese masa de la nave (kg): "
+        leerDoublePositivoConEjemplo(
+            "Ingrese masa de la nave (kg)",
+            26000.0
         );
 
     datos->velocidadInicial =
-        leerDoublePositivo(
-            "Ingrese velocidad inicial (m/s): "
+        leerDoublePositivoConEjemplo(
+            "Ingrese velocidad inicial (m/s)",
+            10900.0
         );
 
     datos->cargado = 1;
 
     printf("\nDatos cargados correctamente.\n");
+    printf("Masa: %.2f kg | Velocidad inicial: %.2f m/s\n",
+           datos->masaNave,
+           datos->velocidadInicial);
 }
 
 /*=========================================
@@ -156,10 +165,8 @@ void punto1_leyNewton(DatosTLI d, NodoEvento **l)
            tramos + 1);
     printf("La nave mantiene su inercia; solo la gravedad terrestre la frena.\n");
 
-    if (l != NULL)
-    {
-        agregarEvento(l, "Punto 1 - Ley de Newton ejecutado", 0.0);
-    }
+    /* El evento se registra desde el menu principal */
+    (void)l;
 }
 
 /*=========================================
@@ -167,8 +174,8 @@ void punto1_leyNewton(DatosTLI d, NodoEvento **l)
 =========================================*/
 
 /*
- * Implementacion temporal.
- * Aqui ira la logica real de la bitacora.
+ * Inserta un evento al final de la lista
+ * enlazada de la bitacora.
  */
 void agregarEvento(
     NodoEvento **l,
@@ -176,29 +183,109 @@ void agregarEvento(
     double t
 )
 {
-    (void)l;
-    (void)x;
-    (void)t;
+    NodoEvento *nuevo;
+    NodoEvento *actual;
+
+    if(l == NULL || x == NULL)
+    {
+        return;
+    }
+
+    nuevo = (NodoEvento *) malloc(sizeof(NodoEvento));
+
+    if(nuevo == NULL)
+    {
+        printf("\nError: no se pudo registrar el evento.\n");
+        return;
+    }
+
+    snprintf(nuevo->descripcion, sizeof(nuevo->descripcion), "%s", x);
+    nuevo->tiempo = t;
+    nuevo->siguiente = NULL;
+
+    if(*l == NULL)
+    {
+        *l = nuevo;
+        return;
+    }
+
+    actual = *l;
+
+    while(actual->siguiente != NULL)
+    {
+        actual = actual->siguiente;
+    }
+
+    actual->siguiente = nuevo;
 }
 
 /*
- * Mostrar eventos registrados.
- * Pendiente de implementacion.
+ * Recorre y muestra todos los eventos
+ * registrados en la bitacora.
  */
 void mostrarBitacora(NodoEvento *l)
 {
-    (void)l;
+    NodoEvento *actual = l;
+    int numero = 1;
 
-    printf("\n[Bitacora aun no implementada]\n");
+    printf("\n========== BITACORA DE EVENTOS ==========\n");
+
+    if(actual == NULL)
+    {
+        printf("\nLa bitacora esta vacia.\n");
+        printf("Ejecute alguna opcion del menu para registrar eventos.\n");
+        printf("==========================================\n");
+        return;
+    }
+
+    printf("%-5s %-10s %s\n", "Nro", "Tiempo", "Descripcion");
+    printf("------------------------------------------\n");
+
+    while(actual != NULL)
+    {
+        printf("%-5d %-10.2f %s\n",
+               numero,
+               actual->tiempo,
+               actual->descripcion);
+
+        actual = actual->siguiente;
+        numero++;
+    }
+
+    printf("------------------------------------------\n");
+    printf("Total de eventos: %d\n", numero - 1);
+    printf("==========================================\n");
 }
 
 /*
- * Liberar memoria de la lista.
- * Pendiente de implementacion.
+ * Libera toda la memoria utilizada por
+ * la lista de eventos.
  */
 void liberarBitacora(NodoEvento *l)
 {
-    (void)l;
+    NodoEvento *actual = l;
+
+    while(actual != NULL)
+    {
+        NodoEvento *temporal = actual;
+
+        actual = actual->siguiente;
+        free(temporal);
+    }
+}
+
+/*
+ * Registra un evento y avanza el tiempo
+ * simulado de la bitacora.
+ */
+static void registrarEvento(
+    NodoEvento **bitacora,
+    const char *descripcion,
+    double *tiempo
+)
+{
+    agregarEvento(bitacora, descripcion, *tiempo);
+    *tiempo += 1.0;
 }
 
 /*=========================================
@@ -225,6 +312,9 @@ int main(void)
     /* Cantidad de energias almacenadas */
     int cantidadHistorial = 0;
 
+    /* Tiempo simulado para los eventos de la bitacora */
+    double tiempoBitacora = 0.0;
+
     int opcion;
 
     do
@@ -234,13 +324,13 @@ int main(void)
         printf("   SIMULADOR TLI TIERRA - LUNA\n");
         printf("====================================\n");
         printf("1. Cargar datos de la nave\n");
-        printf("2. Punto 1 - Ley de Newton\n");
-        printf("3. Punto 2 - Energia\n");
-        printf("4. Punto 3 - Trabajo\n");
-        printf("5. Punto 4 - Combustible\n");
+        printf("2. Ley de Newton\n");
+        printf("3. Energia\n");
+        printf("4. Trabajo\n");
+        printf("5. Combustible\n");
         printf("6. Mostrar bitacora\n");
-        printf("7. Punto 3 - Arboles ABB y AVL\n");
-        printf("8. Punto 3 - Verificar resultados\n");
+        printf("7. Arboles ABB y AVL\n");
+        printf("8. Verificar resultados\n");
         printf("0. Salir\n");
         printf("====================================\n");
         printf("Seleccione una opcion: ");
@@ -262,6 +352,12 @@ int main(void)
                 /* Carga inicial de datos */
                 cargarDatos(&datos);
 
+                registrarEvento(
+                    &bitacora,
+                    "Datos de la nave cargados",
+                    &tiempoBitacora
+                );
+
                 break;
 
             case 2:
@@ -279,6 +375,12 @@ int main(void)
                 punto1_leyNewton(
                     datos,
                     &bitacora
+                );
+
+                registrarEvento(
+                    &bitacora,
+                    "Ley de Newton ejecutada",
+                    &tiempoBitacora
                 );
 
                 break;
@@ -302,6 +404,12 @@ int main(void)
                         &cantidadHistorial
                     );
 
+                registrarEvento(
+                    &bitacora,
+                    "Balance energetico calculado",
+                    &tiempoBitacora
+                );
+
                 break;
 
             case 4:
@@ -322,6 +430,12 @@ int main(void)
                     &telemetria
                 );
 
+                registrarEvento(
+                    &bitacora,
+                    "Trabajo y equilibrio calculados",
+                    &tiempoBitacora
+                );
+
                 break;
 
             case 5:
@@ -339,6 +453,12 @@ int main(void)
                 punto4_combustible(
                     datos,
                     balance
+                );
+
+                registrarEvento(
+                    &bitacora,
+                    "Consumo de combustible estimado",
+                    &tiempoBitacora
                 );
 
                 break;
@@ -364,12 +484,24 @@ int main(void)
 
                 punto3_mostrar_arboles(&telemetria);
 
+                registrarEvento(
+                    &bitacora,
+                    "Arboles ABB y AVL mostrados",
+                    &tiempoBitacora
+                );
+
                 break;
 
             case 8:
 
                 /* Autoverificacion del Punto 3 */
                 trabajo_verificar();
+
+                registrarEvento(
+                    &bitacora,
+                    "Verificacion de resultados ejecutada",
+                    &tiempoBitacora
+                );
 
                 break;
 

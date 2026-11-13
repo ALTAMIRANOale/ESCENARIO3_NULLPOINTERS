@@ -222,10 +222,11 @@ reducción de comparaciones.
 
 ## 10. Estado del proyecto
 
-- Punto 1: pendiente (Altamirano).
+- Punto 1: implementado (ley de Newton y desaceleración por tramos).
 - Punto 2: implementado.
 - Punto 3: implementado (trabajo, equilibrio, telemetría, ABB, AVL y autopruebas).
 - Punto 4: implementado.
+- Bitácora: implementada (lista enlazada de eventos).
 
 ---
 
@@ -238,10 +239,11 @@ mingw32-make run
 
 Luego:
 
-1. Opción `1`: cargar masa `26000` y velocidad `10900`.
+1. Opción `1`: presionar Enter para usar los valores de ejemplo (`26000` kg y `10900` m/s) o ingresar otros.
 2. Opción `3`: ejecutar el balance energético.
 3. Opción `4`: calcular el Punto 3 y ver la comparación ABB / AVL.
-4. Opción `7`: ver el detalle de los árboles.
-5. Opción `8`: ejecutar las autopruebas.
+4. Opción `6`: ver la bitácora de eventos registrados.
+5. Opción `7`: ver el detalle de los árboles.
+6. Opción `8`: ejecutar las autopruebas.
 
 Resultado esperado de las autopruebas: `22/22 pruebas OK`.

@@ -14,6 +14,14 @@ ingresados por el usuario.
    negativos y ceros */
 double leerDoublePositivo(const char *mensaje);
 
+/* Lee un numero positivo mostrando un valor
+   de ejemplo. Si se presiona Enter, usa el
+   valor de ejemplo. */
+double leerDoublePositivoConEjemplo(
+    const char *mensaje,
+    double ejemplo
+);
+
 /* Lee un numero dentro de un rango cerrado */
 double leerDoubleEnRango(
     const char *mensaje,
