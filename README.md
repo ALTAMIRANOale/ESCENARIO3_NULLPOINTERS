@@ -218,30 +218,3 @@ Las autopruebas de la opción `8` verifican estos valores, la clasificación del
 equilibrio, la conservación de energía, la altura del AVL, el orden del ABB y la
 reducción de comparaciones.
 
----
-
-## 10. Estado del proyecto
-
-- Punto 1: pendiente (Altamirano).
-- Punto 2: implementado.
-- Punto 3: implementado (trabajo, equilibrio, telemetría, ABB, AVL y autopruebas).
-- Punto 4: implementado.
-
----
-
-## 11. Verificación rápida
-
-```sh
-mingw32-make
-mingw32-make run
-```
-
-Luego:
-
-1. Opción `1`: cargar masa `26000` y velocidad `10900`.
-2. Opción `3`: ejecutar el balance energético.
-3. Opción `4`: calcular el Punto 3 y ver la comparación ABB / AVL.
-4. Opción `7`: ver el detalle de los árboles.
-5. Opción `8`: ejecutar las autopruebas.
-
-Resultado esperado de las autopruebas: `22/22 pruebas OK`.
